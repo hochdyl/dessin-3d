@@ -1,0 +1,93 @@
+Unit Volume3D;
+
+Interface //////////////////////////////////////////////////////////////////////
+
+
+Type TPoint3D = Record
+      x,y,z  : Real;
+     end;
+
+ Const NbrPointsMaxi = 100 ;
+
+Type TVolume3D = Class
+     Private
+       TabPoints_ : Array [1..NbrPointsMaxi] of TPoint3D;
+       NbrPoints_ : Integer ;
+     Public
+       Constructor create();
+       Procedure AjouterSegment (x1 , y1 , z1 , x2 , y2 , z2 : Real);
+       Procedure Tracer();
+       Procedure Pivoter ( alpha : Real ; axe : Char ) ;
+       Procedure Translater (dx,dy,dz : Real  ) ;
+       Procedure PivoterAutour(x,y,z : Real ; alpha : Real ; axe : Char ) ;
+     end;
+
+
+
+Implementation /////////////////////////////////////////////////////////////////
+
+uses Graphics, G2D , G3D;
+
+
+Constructor TVolume3D.create();
+Var i : integer;
+begin
+  For i := 1 To NbrPointsMaxi do
+    TabPoints_[i].x := 0;
+    TabPoints_[i].y := 0;
+    TabPoints_[i].z := 0;
+End;//--------------------------------------------------------------------------
+
+Procedure TVolume3D.AjouterSegment (x1 , y1 , z1 , x2 , y2 , z2 : Real);
+Begin
+  Inc(NbrPoints_);
+  TabPoints_[NbrPoints_].x := x1;
+  TabPoints_[NbrPoints_].y := y1;
+  TabPoints_[NbrPoints_].z := z1;
+  Inc(NbrPoints_);
+  TabPoints_[NbrPoints_].x := x2;
+  TabPoints_[NbrPoints_].y := y2;
+  TabPoints_[NbrPoints_].z := z2;
+end;//--------------------------------------------------------------------------
+
+Procedure TVolume3D.Tracer();
+Var i , i1 , i2 : Integer;
+Begin
+     For i := 1 To NbrPoints_ Div 2 do
+         Begin
+         i1 := (i-1)*2+1;
+         i2 := i1 +1;
+         TracerSegment3D(TabPoints_[i1].x ,TabPoints_[i1].y,TabPoints_[i1].z,
+                         TabPoints_[i2].x,TabPoints_[i2].y,TabPoints_[i2].z);
+          end;
+end;//--------------------------------------------------------------------------
+
+
+Procedure TVolume3D.Pivoter ( alpha : Real ; axe : Char ) ; //------------------
+//
+//------------------------------------------------------------------------------
+var i : Integer ;
+Begin
+   For i:= 1 To NbrPoints_ Do
+     Pivoter3D ( TabPoints_[i].x, TabPoints_[i].y,TabPoints_[i].z  , alpha,axe);
+End; //-------------------------------------------------------------------------
+
+Procedure TVolume3D.Translater (dx,dy,dz : Real  ) ; //-------------------------
+//
+//------------------------------------------------------------------------------
+var i : Integer ;
+Begin
+   For i:= 1 To NbrPoints_ Do
+     Translater3D ( TabPoints_[i].x, TabPoints_[i].y,TabPoints_[i].z  , dx,dy,dz);
+End; //-------------------------------------------------------------------------
+
+Procedure TVolume3D.PivoterAutour(x,y,z : Real ; alpha : Real ; axe : Char ) ;//
+//
+//------------------------------------------------------------------------------
+Var i : Integer ;
+Begin
+   For i:= 1 To NbrPoints_ Do
+     Pivoter3D ( TabPoints_[i].x, TabPoints_[i].y,TabPoints_[i].z  , alpha,axe);
+End; //-------------------------------------------------------------------------
+
+End.////////////////////////////////////////////////////////////////////////////
